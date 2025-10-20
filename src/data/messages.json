@@ -1,0 +1,37 @@
+{
+  "messages": [
+    {
+      "id": 1,
+      "emetteerId": 2,
+      "emetteur": "Jean Kouassi",
+      "recepteurId": 3,
+      "recepteur": "Marie Diallo",
+      "contenu": "Bonjour, je suis intéressé par vos livres de mathématiques. Sont-ils toujours disponibles ?",
+      "dateEnvoi": "2025-03-15T10:30:00",
+      "lu": true,
+      "annoncePapier": 1
+    },
+    {
+      "id": 2,
+      "emetteerId": 3,
+      "emetteur": "Marie Diallo",
+      "recepteurId": 2,
+      "recepteur": "Jean Kouassi",
+      "contenu": "Oui, ils sont toujours disponibles ! Vous pouvez les prendre quand vous voulez.",
+      "dateEnvoi": "2025-03-15T11:00:00",
+      "lu": true,
+      "annoncePapier": 1
+    },
+    {
+      "id": 3,
+      "emetteerId": 4,
+      "emetteur": "Ahmed Traore",
+      "recepteurId": 2,
+      "recepteur": "Jean Kouassi",
+      "contenu": "Vous cherchez à troquer votre sac à dos ? J'ai des livres intéressants.",
+      "dateEnvoi": "2025-03-14T15:45:00",
+      "lu": false,
+      "annoncePapier": 4
+    }
+  ]
+}

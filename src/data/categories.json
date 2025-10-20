@@ -1,0 +1,34 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "nom": "Livres",
+      "icon": "📚",
+      "sousCategories": ["Scolaires", "Références", "Romans", "Parascolaires"]
+    },
+    {
+      "id": 2,
+      "nom": "Fournitures",
+      "icon": "✏️",
+      "sousCategories": ["Papeterie", "Électronique scolaire", "Matériel de dessin"]
+    },
+    {
+      "id": 3,
+      "nom": "Vêtements",
+      "icon": "👕",
+      "sousCategories": ["Uniformes", "Chaussures", "Accessoires vestimentaires"]
+    },
+    {
+      "id": 4,
+      "nom": "Accessoires",
+      "icon": "🎒",
+      "sousCategories": ["Sacs", "Montres", "Lunettes", "Bijoux scolaires"]
+    },
+    {
+      "id": 5,
+      "nom": "Électronique",
+      "icon": "💻",
+      "sousCategories": ["Ordinateurs", "Calculatrices", "Tablettes", "Téléphones"]
+    }
+  ]
+}

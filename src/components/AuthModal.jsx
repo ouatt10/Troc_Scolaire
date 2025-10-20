@@ -3,6 +3,9 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Mail, Lock, User, Phone, Eye, EyeOff } from "lucide-react";
 
+// Liste des emails administrateurs
+const ADMIN_EMAILS = ["admin@trocscolaire.com"]; // Ajoute tes emails admin ici
+
 export default function AuthModal({ onClose, onAuthSuccess }) {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -21,6 +24,11 @@ export default function AuthModal({ onClose, onAuthSuccess }) {
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
+  };
+
+  // Vérifier si un email est admin
+  const isAdminEmail = (email) => {
+    return ADMIN_EMAILS.includes(email.toLowerCase());
   };
 
   // Validation du formulaire
@@ -69,14 +77,16 @@ export default function AuthModal({ onClose, onAuthSuccess }) {
       const userData = {
         id: Date.now(),
         nom: formData.nom || "Utilisateur",
-        prenom: formData.prenom || "Test",
+        prenom: formData.prenom || "Utilisateur",
         email: formData.email,
-        telephone: formData.telephone,
-        isAdmin: formData.email === "admin@trocscolaire.com" // ✅ Définir admin
+        telephone: formData.telephone || "",
+        isAdmin: isAdminEmail(formData.email), // ✅ Utiliser la fonction de vérification
+        role: isAdminEmail(formData.email) ? "admin" : "user" // Ajouter le rôle
       };
 
-      // Sauvegarder dans localStorage pour l'instant
+      // Sauvegarder dans localStorage
       localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem("userRole", userData.role); // Ajouter la sauvegarde du rôle
       
       onAuthSuccess(userData);
       setIsLoading(false);

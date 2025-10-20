@@ -4,7 +4,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Header from "./components/Header";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-import Home from "./pages/Home";
+import Accueil from "./pages/Home";
 import Annonces from "./pages/Annonces";
 import Deposer from "./pages/Deposer";
 import Profil from "./pages/Profil";
@@ -16,49 +16,46 @@ export default function App() {
   return (
     <div className="app-root min-h-screen bg-gray-50">
       <Header />
-      
       <main id="main" className="pt-32 min-h-screen" role="main" tabIndex={-1}>
         <div className="max-w-7xl mx-auto px-4 lg:px-6 py-8">
           <Routes>
-            {/* Pages publiques */}
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Accueil />} />
             <Route path="/annonces" element={<Annonces />} />
             <Route path="/apropos" element={<Apropos />} />
-            
-            {/* Pages protégées */}
-            <Route 
-              path="/profil" 
+
+            <Route
+              path="/profil"
               element={
                 <ProtectedRoute pageName="votre profil">
                   <Profil />
                 </ProtectedRoute>
-              } 
+              }
             />
-            <Route 
-              path="/deposer" 
+            <Route
+              path="/deposer"
               element={
                 <ProtectedRoute pageName="la publication d'annonces">
                   <Deposer />
                 </ProtectedRoute>
-              } 
+              }
             />
-            <Route 
-              path="/dashboard" 
+            <Route
+              path="/dashboard"
               element={
                 <ProtectedRoute pageName="le tableau de bord">
                   <UserDashboard />
                 </ProtectedRoute>
-              } 
+              }
             />
-            <Route 
-              path="/admin" 
+            <Route
+              path="/admin"
               element={
-                <ProtectedRoute pageName="l'administration">
+                <ProtectedRoute pageName="l'administration" requiredRole="admin">
                   <AdminModeration />
                 </ProtectedRoute>
-              } 
+              }
             />
-            
+
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
