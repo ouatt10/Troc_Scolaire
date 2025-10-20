@@ -1,33 +1,24 @@
-// src/services/api.js - Service API pour simuler le backend
+// src/services/api.js - Optimisé pour Vercel
+
+// Import statique des données JSON
+import usersData from "../data/users.json";
+import annoncesData from "../data/annonces.json";
+import messagesData from "../data/messages.json";
+import categoriesData from "../data/categories.json";
 
 class MockAPI {
-  constructor() {
-    this.delay = 500; // Délai de simulation (ms)
-  }
-
-  // Utilitaire pour simuler un délai réseau
-  async simulateDelay() {
-    return new Promise(resolve => setTimeout(resolve, this.delay));
-  }
-
   // ===== UTILISATEURS =====
   async getUsers() {
-    await this.simulateDelay();
-    const users = await import("../data/users.json");
-    return users.users;
+    return usersData.users;
   }
 
   async getUserById(id) {
-    await this.simulateDelay();
-    const users = await import("../data/users.json");
-    return users.users.find(u => u.id === parseInt(id));
+    return usersData.users.find(u => u.id === parseInt(id));
   }
 
   async createUser(userData) {
-    await this.simulateDelay();
-    const users = await import("../data/users.json");
     const newUser = {
-      id: Math.max(...users.users.map(u => u.id)) + 1,
+      id: Math.max(...usersData.users.map(u => u.id)) + 1,
       ...userData,
       role: "user",
       isAdmin: false,
@@ -38,19 +29,15 @@ class MockAPI {
       noteMoyenne: 0,
       echangesReussis: 0
     };
-    users.users.push(newUser);
-    localStorage.setItem("mockUsers", JSON.stringify(users.users));
     return newUser;
   }
 
   async updateUser(id, userData) {
     await this.simulateDelay();
-    const users = await import("../data/users.json");
-    const index = users.users.findIndex(u => u.id === parseInt(id));
+    const index = usersData.users.findIndex(u => u.id === parseInt(id));
     if (index !== -1) {
-      users.users[index] = { ...users.users[index], ...userData };
-      localStorage.setItem("mockUsers", JSON.stringify(users.users));
-      return users.users[index];
+      usersData.users[index] = { ...usersData.users[index], ...userData };
+      return usersData.users[index];
     }
     throw new Error("Utilisateur non trouvé");
   }
@@ -58,8 +45,7 @@ class MockAPI {
   // ===== ANNONCES =====
   async getAnnonces(filters = {}) {
     await this.simulateDelay();
-    const annonces = await import("../data/annonces.json");
-    let result = annonces.annonces;
+    let result = [...annoncesData.annonces];
 
     if (filters.categorie) {
       result = result.filter(a => a.categorie === filters.categorie);
@@ -80,15 +66,13 @@ class MockAPI {
 
   async getAnnonceById(id) {
     await this.simulateDelay();
-    const annonces = await import("../data/annonces.json");
-    return annonces.annonces.find(a => a.id === parseInt(id));
+    return annoncesData.annonces.find(a => a.id === parseInt(id));
   }
 
   async createAnnonce(annonceData) {
     await this.simulateDelay();
-    const annonces = await import("../data/annonces.json");
     const newAnnonce = {
-      id: Math.max(...annonces.annonces.map(a => a.id)) + 1,
+      id: Math.max(...annoncesData.annonces.map(a => a.id)) + 1,
       ...annonceData,
       datePublication: new Date().toISOString(),
       dateModification: new Date().toISOString(),
@@ -98,34 +82,28 @@ class MockAPI {
       commentaires: 0,
       troqueAvec: null
     };
-    annonces.annonces.push(newAnnonce);
-    localStorage.setItem("mockAnnonces", JSON.stringify(annonces.annonces));
     return newAnnonce;
   }
 
   async updateAnnonce(id, annonceData) {
     await this.simulateDelay();
-    const annonces = await import("../data/annonces.json");
-    const index = annonces.annonces.findIndex(a => a.id === parseInt(id));
+    const index = annoncesData.annonces.findIndex(a => a.id === parseInt(id));
     if (index !== -1) {
-      annonces.annonces[index] = { 
-        ...annonces.annonces[index], 
+      annoncesData.annonces[index] = { 
+        ...annoncesData.annonces[index], 
         ...annonceData,
         dateModification: new Date().toISOString()
       };
-      localStorage.setItem("mockAnnonces", JSON.stringify(annonces.annonces));
-      return annonces.annonces[index];
+      return annoncesData.annonces[index];
     }
     throw new Error("Annonce non trouvée");
   }
 
   async deleteAnnonce(id) {
     await this.simulateDelay();
-    const annonces = await import("../data/annonces.json");
-    const index = annonces.annonces.findIndex(a => a.id === parseInt(id));
+    const index = annoncesData.annonces.findIndex(a => a.id === parseInt(id));
     if (index !== -1) {
-      annonces.annonces.splice(index, 1);
-      localStorage.setItem("mockAnnonces", JSON.stringify(annonces.annonces));
+      annoncesData.annonces.splice(index, 1);
       return true;
     }
     throw new Error("Annonce non trouvée");
@@ -134,38 +112,32 @@ class MockAPI {
   // ===== MESSAGES =====
   async getMessages(userId) {
     await this.simulateDelay();
-    const messages = await import("../data/messages.json");
-    return messages.messages.filter(m => 
+    return messagesData.messages.filter(m => 
       m.emetteerId === userId || m.recepteurId === userId
     );
   }
 
   async sendMessage(messageData) {
     await this.simulateDelay();
-    const messages = await import("../data/messages.json");
     const newMessage = {
-      id: Math.max(...messages.messages.map(m => m.id), 0) + 1,
+      id: Math.max(...messagesData.messages.map(m => m.id), 0) + 1,
       ...messageData,
       dateEnvoi: new Date().toISOString(),
       lu: false
     };
-    messages.messages.push(newMessage);
-    localStorage.setItem("mockMessages", JSON.stringify(messages.messages));
     return newMessage;
   }
 
   // ===== CATÉGORIES =====
   async getCategories() {
     await this.simulateDelay();
-    const categories = await import("../data/categories.json");
-    return categories.categories;
+    return categoriesData.categories;
   }
 
   // ===== AUTHENTIFICATION =====
   async login(email, password) {
     await this.simulateDelay();
-    const users = await import("../data/users.json");
-    const user = users.users.find(u => u.email === email && u.password === password);
+    const user = usersData.users.find(u => u.email === email && u.password === password);
     if (user) {
       return user;
     }
