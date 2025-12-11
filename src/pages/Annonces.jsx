@@ -15,7 +15,7 @@ export default function Annonces() {
       categorie: "Manuels scolaires",
       niveau: "Lycée",
       type: "Vente",
-      imageUrl: "/src/assets/Manuels scolaires.jpg",
+      imageUrl: "/image/manuels-scolaires.jpg",
       image: "📚",
       vendeur: "Kouassi Jean"
     },
@@ -27,7 +27,7 @@ export default function Annonces() {
       categorie: "Fournitures",
       niveau: "Collège",
       type: "Don",
-      imageUrl: "/src/assets/Calculatrice Scientifique Casio.jpg",
+      imageUrl: "/image/calculatrice-casio.jpg",
       image: "🧮",
       vendeur: "Marie Traoré"
     },
@@ -39,7 +39,7 @@ export default function Annonces() {
       categorie: "Sacs et cartables",
       niveau: "Primaire",
       type: "Vente",
-      imageUrl: "/src/assets/Primaire.jpg",
+      imageUrl: "/image/primaire.jpg",
       image: "🎒",
       vendeur: "Fatou Diallo"
     },
@@ -51,7 +51,7 @@ export default function Annonces() {
       categorie: "Manuels scolaires",
       niveau: "Primaire",
       type: "Échange",
-      imageUrl: "/src/assets/Collection de livres.jpg",
+      imageUrl: "/image/collection-livres.jpg",
       image: "📖",
       vendeur: "Ibrahim Koné"
     },
@@ -63,7 +63,7 @@ export default function Annonces() {
       categorie: "Matériel informatique",
       niveau: "Université",
       type: "Vente",
-      imageUrl: "/src/assets/Matériel informatique.jpg",
+      imageUrl: "/image/materiel-informatique.jpg",
       image: "💻",
       vendeur: "Yao Michel"
     },
@@ -71,11 +71,11 @@ export default function Annonces() {
       id: 6,
       titre: "Uniformes collège fille taille M",
       description: "1 complet lavé et repassé",
-      prix: "3000",
+      prix: 3000,
       categorie: "Uniformes",
       niveau: "Collège",
       type: "Vente",
-      imageUrl: "/src/assets/Uniformes.jpg",
+      imageUrl: "/image/uniformes.jpg",
       image: "👔",
       vendeur: "Aya N'Guessan"
     },
@@ -87,7 +87,7 @@ export default function Annonces() {
       categorie: "Matériel informatique", 
       niveau: "Université",
       type: "Vente",
-      imageUrl: "/src/assets/Université.jpg",
+      imageUrl: "/image/universite.jpg",
       image: "📱",
       vendeur: "Kouadio André"
     },
@@ -99,7 +99,7 @@ export default function Annonces() {
       categorie: "Fournitures",
       niveau: "Primaire",
       type: "Vente",
-      imageUrl: "/src/assets/Fournitures.jpg",
+      imageUrl: "/image/fournitures.jpg",
       image: "✏️",
       vendeur: "Aminata Cissé"
     },
@@ -111,7 +111,7 @@ export default function Annonces() {
       categorie: "Manuels scolaires",
       niveau: "Collège",
       type: "Vente",
-      imageUrl: "/src/assets/Atlas of Global Geography.jpg",
+      imageUrl: "/image/atlas.jpg",
       image: "🗺️",
       vendeur: "Bamba Seydou"
     }

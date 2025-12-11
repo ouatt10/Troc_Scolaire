@@ -44,7 +44,7 @@ export default function Home() {
       prix: 5000,
       categorie: "Manuels scolaires",
       niveau: "Lycée",
-      imageUrl: "/src/assets/Manuels scolaires.jpg", // Image réelle
+      imageUrl: "/image/manuels-scolaires.jpg", // Image réelle
       image: "📚", // Fallback emoji si pas d'image
       type: "Vente"
     },
@@ -54,7 +54,7 @@ export default function Home() {
       prix: 0,
       categorie: "Fournitures",
       niveau: "Collège",
-      imageUrl: "/src/assets/Calculatrice Scientifique Casio.jpg",
+      imageUrl: "/image/calculatrice-casio.jpg",
       image: "🧮",
       type: "Don"
     },
@@ -64,7 +64,7 @@ export default function Home() {
       prix: 7000,
       categorie: "Sacs et cartables",
       niveau: "Primaire",
-      imageUrl: "/src/assets/Sacs et cartables.jpg",
+      imageUrl: "/image/Sacs-et-cartables.jpg",
       image: "🎒",
       type: "Vente"
     },
@@ -74,7 +74,7 @@ export default function Home() {
       prix: 0,
       categorie: "Manuels scolaires",
       niveau: "Primaire",
-      imageUrl: "/src/assets/Collection de livres.jpg",
+      imageUrl: "/image/collection-livres.jpg",
       image: "📖",
       type: "Échange"
     }
