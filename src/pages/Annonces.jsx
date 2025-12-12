@@ -2,10 +2,12 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import SearchBar from "../components/SearchBar";
-import { MessageCircle, User } from "lucide-react";
+import { MessageCircle, User, X, Info } from "lucide-react";
 
 export default function Annonces() {
-  // Données d'exemple simplifiées
+  const [showBanner, setShowBanner] = useState(true);
+
+  // Données d'exemple - AJOUTEZ isDemo: true à chaque article
   const allAnnonces = [
     {
       id: 1,
@@ -17,7 +19,8 @@ export default function Annonces() {
       type: "Vente",
       imageUrl: "/image/manuels-scolaires.jpg",
       image: "📚",
-      vendeur: "Kouassi Jean"
+      vendeur: "Équipe TrocScolaire",
+      isDemo: true // ← AJOUTEZ CETTE LIGNE
     },
     {
       id: 2,
@@ -29,7 +32,8 @@ export default function Annonces() {
       type: "Don",
       imageUrl: "/image/calculatrice-casio.jpg",
       image: "🧮",
-      vendeur: "Marie Traoré"
+      vendeur: "Équipe TrocScolaire",
+      isDemo: true // ← AJOUTEZ CETTE LIGNE
     },
     {
       id: 3,
@@ -41,7 +45,8 @@ export default function Annonces() {
       type: "Vente",
       imageUrl: "/image/primaire.jpg",
       image: "🎒",
-      vendeur: "Fatou Diallo"
+      vendeur: "Équipe TrocScolaire",
+      isDemo: true // ← AJOUTEZ CETTE LIGNE
     },
     {
       id: 4,
@@ -53,7 +58,8 @@ export default function Annonces() {
       type: "Échange",
       imageUrl: "/image/collection-livres.jpg",
       image: "📖",
-      vendeur: "Ibrahim Koné"
+      vendeur: "Équipe TrocScolaire",
+      isDemo: true // ← AJOUTEZ CETTE LIGNE
     },
     {
       id: 5,
@@ -65,7 +71,8 @@ export default function Annonces() {
       type: "Vente",
       imageUrl: "/image/materiel-informatique.jpg",
       image: "💻",
-      vendeur: "Yao Michel"
+      vendeur: "Équipe TrocScolaire",
+      isDemo: true // ← AJOUTEZ CETTE LIGNE
     },
     {
       id: 6,
@@ -77,7 +84,8 @@ export default function Annonces() {
       type: "Vente",
       imageUrl: "/image/uniformes.jpg",
       image: "👔",
-      vendeur: "Aya N'Guessan"
+      vendeur: "Équipe TrocScolaire",
+      isDemo: true // ← AJOUTEZ CETTE LIGNE
     },
     {
       id: 7,
@@ -89,7 +97,8 @@ export default function Annonces() {
       type: "Vente",
       imageUrl: "/image/universite.jpg",
       image: "📱",
-      vendeur: "Kouadio André"
+      vendeur: "Équipe TrocScolaire",
+      isDemo: true // ← AJOUTEZ CETTE LIGNE
     },
     {
       id: 8,
@@ -101,7 +110,8 @@ export default function Annonces() {
       type: "Vente",
       imageUrl: "/image/fournitures.jpg",
       image: "✏️",
-      vendeur: "Aminata Cissé"
+      vendeur: "Équipe TrocScolaire",
+      isDemo: true // ← AJOUTEZ CETTE LIGNE
     },
     {
       id: 9,
@@ -113,7 +123,8 @@ export default function Annonces() {
       type: "Vente",
       imageUrl: "/image/atlas.jpg",
       image: "🗺️",
-      vendeur: "Bamba Seydou"
+      vendeur: "Équipe TrocScolaire",
+      isDemo: true // ← AJOUTEZ CETTE LIGNE
     }
   ];
 
@@ -151,6 +162,33 @@ export default function Annonces() {
   return (
     <div className="w-full space-y-8">
       
+      {/* NOUVEAU : Banner d'information pour articles démo */}
+      {showBanner && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-600 rounded-lg p-4 shadow-sm"
+        >
+          <div className="flex items-start gap-3">
+            <Info className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="text-gray-800">
+                <span className="font-semibold text-blue-700">Bienvenue sur TrocScolaire !</span>
+                {' '}Les articles affichés sont des exemples pour illustrer le fonctionnement de la plateforme. 
+                Inscrivez-vous pour publier vos propres annonces d'échange !
+              </p>
+            </div>
+            <button
+              onClick={() => setShowBanner(false)}
+              className="text-gray-500 hover:text-gray-700 transition-colors flex-shrink-0"
+              aria-label="Fermer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+        </motion.div>
+      )}
+
       {/* Titre de la page */}
       <div className="text-center space-y-2">
         <h1 className="text-4xl font-bold text-gray-900">
@@ -204,7 +242,14 @@ export default function Annonces() {
                   {annonce.image}
                 </div>
                 
-                {/* Badge type */}
+                {/* NOUVEAU : Badge démo - affiché en premier */}
+                {annonce.isDemo && (
+                  <span className="absolute top-3 left-3 px-3 py-1 text-xs font-semibold rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg backdrop-blur-sm z-10">
+                    📌 Exemple
+                  </span>
+                )}
+
+                {/* Badge type - déplacé à droite */}
                 <span
                   className={`absolute top-3 right-3 px-3 py-1 text-xs font-semibold rounded-full backdrop-blur-sm shadow-lg ${
                     annonce.type === "Don"
