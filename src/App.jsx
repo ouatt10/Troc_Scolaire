@@ -4,13 +4,18 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Header from "./components/Header";
 import ProtectedRoute from "./components/ProtectedRoute";
 
+// Pages publiques
 import Home from "./pages/Home";
 import Annonces from "./pages/Annonces";
+import Apropos from "./pages/Apropos";
+import Login from "./pages/Login";          
+import Register from "./pages/Register";    
+
+// Pages protégées
 import Deposer from "./pages/Deposer";
 import Profil from "./pages/Profil";
 import AdminModeration from "./pages/AdminModeration";
 import UserDashboard from "./pages/UserDashboard";
-import Apropos from "./pages/Apropos";
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -48,6 +53,10 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/annonces" element={<Annonces />} />
             <Route path="/apropos" element={<Apropos />} />
+            
+            {/* ✅ ROUTES D'AUTHENTIFICATION AJOUTÉES */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             
             {/* Pages protégées - Utilisateurs normaux */}
             <Route 

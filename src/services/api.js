@@ -1,5 +1,3 @@
-// src/services/api.js - Optimisé pour Vercel
-
 // Import statique des données JSON
 import usersData from "../data/users.json";
 import annoncesData from "../data/annonces.json";

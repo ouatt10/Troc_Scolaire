@@ -130,34 +130,59 @@ export default function Annonces() {
 
   const [annonces, setAnnonces] = useState(allAnnonces);
 
-  const handleSearch = (filters) => {
-    let results = [...allAnnonces];
+const handleSearch = (filters) => {
+  console.log("🔍 Filtres reçus:", filters);
+  
+  let results = [...allAnnonces];
+  console.log("📦 Nombre d'annonces avant filtre:", results.length);
 
-    // Filtre par terme de recherche
-    if (filters.searchTerm) {
-      results = results.filter(a =>
-        a.titre.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
-        a.description.toLowerCase().includes(filters.searchTerm.toLowerCase())
-      );
-    }
+  // Filtre par terme de recherche
+  if (filters.searchTerm) {
+    console.log("🔤 Recherche texte:", filters.searchTerm);
+    results = results.filter(a =>
+      a.titre.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
+      a.description.toLowerCase().includes(filters.searchTerm.toLowerCase())
+    );
+    console.log("✅ Après filtre texte:", results.length, "résultats");
+  }
 
-    // Filtre par catégorie
-    if (filters.category) {
-      results = results.filter(a => a.categorie === filters.category);
-    }
+  // Filtre par catégorie
+  if (filters.category) {
+    console.log("📁 Filtre catégorie:", filters.category);
+    const avant = results.length;
+    results = results.filter(a => {
+      console.log(`   Comparaison: "${a.categorie}" === "${filters.category}"`, a.categorie === filters.category);
+      return a.categorie === filters.category;
+    });
+    console.log(`✅ Après filtre catégorie: ${avant} → ${results.length} résultats`);
+  }
 
-    // Filtre par niveau
-    if (filters.niveau) {
-      results = results.filter(a => a.niveau === filters.niveau);
-    }
+  // Filtre par niveau
+  if (filters.niveau) {
+    console.log("🎓 Filtre niveau:", filters.niveau);
+    const avant = results.length;
+    results = results.filter(a => {
+      console.log(`   Comparaison: "${a.niveau}" === "${filters.niveau}"`, a.niveau === filters.niveau);
+      return a.niveau === filters.niveau;
+    });
+    console.log(`✅ Après filtre niveau: ${avant} → ${results.length} résultats`);
+  }
 
-    // Filtre par prix maximum
-    if (filters.maxPrice !== null) {
-      results = results.filter(a => a.prix <= filters.maxPrice);
-    }
+  // Filtre par prix maximum
+  if (filters.maxPrice !== null && filters.maxPrice !== undefined) {
+    console.log("💰 Filtre prix max:", filters.maxPrice);
+    const avant = results.length;
+    results = results.filter(a => {
+      console.log(`   Comparaison: ${a.prix} <= ${filters.maxPrice}`, a.prix <= filters.maxPrice);
+      return a.prix <= filters.maxPrice;
+    });
+    console.log(`✅ Après filtre prix: ${avant} → ${results.length} résultats`);
+  }
 
-    setAnnonces(results);
-  };
+  console.log("🎯 RÉSULTATS FINAUX:", results.length, "annonces");
+  console.log("───────────────────────────────────────");
+  setAnnonces(results);
+};
 
   return (
     <div className="w-full space-y-8">

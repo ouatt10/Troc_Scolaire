@@ -2,13 +2,15 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Lock, UserPlus, LogIn, AlertCircle } from "lucide-react";
-import AuthModal from "./AuthModal";
+import { useNavigate } from "react-router-dom"; // ✅ AJOUTÉ
+import { useAuth } from "../context/AuthContext";
 
 export default function ProtectedRoute({ children, pageName = "cette page", requiredRole = "user" }) {
+  const navigate = useNavigate(); // ✅ AJOUTÉ
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState(null);
   const [isChecking, setIsChecking] = useState(true);
-  const [showAuthModal, setShowAuthModal] = useState(false);
+  // ✅ SUPPRIMÉ : const [showAuthModal, setShowAuthModal] = useState(false);
 
   useEffect(() => {
     // Vérifier si l'utilisateur est connecté et récupérer son rôle
@@ -25,11 +27,9 @@ export default function ProtectedRoute({ children, pageName = "cette page", requ
     setIsChecking(false);
   }, []);
 
-  const handleAuthSuccess = (user) => {
-    setIsAuthenticated(true);
-    setUserRole(user.role || (user.isAdmin ? "admin" : "user"));
-    setShowAuthModal(false);
-    // Pas de reload, on met à jour l'état directement
+  // ✅ NOUVEAU : Redirection vers /login
+  const handleRedirectToLogin = () => {
+    navigate("/login");
   };
 
   // Pendant la vérification
@@ -44,90 +44,81 @@ export default function ProtectedRoute({ children, pageName = "cette page", requ
   // Si non connecté, afficher la page de protection
   if (!isAuthenticated) {
     return (
-      <>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="min-h-[60vh] flex items-center justify-center px-4"
-        >
-          <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8 text-center space-y-6">
-            {/* Icône de verrouillage */}
-            <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
-              <Lock className="text-blue-600" size={40} />
-            </div>
-
-            {/* Titre */}
-            <div className="space-y-2">
-              <h2 className="text-2xl font-bold text-gray-900">
-                Connexion requise
-              </h2>
-              <p className="text-gray-600">
-                Vous devez être connecté pour accéder à {pageName}
-              </p>
-            </div>
-
-            {/* Boutons d'action */}
-            <div className="space-y-3 pt-4">
-              <motion.button
-                onClick={() => setShowAuthModal(true)}
-                className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <LogIn size={20} />
-                Se connecter
-              </motion.button>
-
-              <p className="text-sm text-gray-600">
-                Pas encore de compte ?{" "}
-                <button
-                  onClick={() => setShowAuthModal(true)}
-                  className="text-blue-600 hover:text-blue-700 font-semibold"
-                >
-                  Créer un compte gratuitement
-                </button>
-              </p>
-            </div>
-
-            {/* Avantages de la connexion */}
-            <div className="pt-6 border-t border-gray-200">
-              <p className="text-sm font-semibold text-gray-700 mb-3">
-                Avec un compte, vous pouvez :
-              </p>
-              <ul className="text-sm text-gray-600 space-y-2 text-left">
-                <li className="flex items-start gap-2">
-                  <span className="text-green-600 mt-0.5">✓</span>
-                  <span>Publier des annonces gratuitement</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-600 mt-0.5">✓</span>
-                  <span>Contacter les vendeurs directement</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-600 mt-0.5">✓</span>
-                  <span>Gérer votre profil et vos annonces</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-600 mt-0.5">✓</span>
-                  <span>Sauvegarder vos favoris</span>
-                </li>
-              </ul>
-            </div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="min-h-[60vh] flex items-center justify-center px-4"
+      >
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8 text-center space-y-6">
+          {/* Icône de verrouillage - ✅ IDENTIQUE */}
+          <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
+            <Lock className="text-blue-600" size={40} />
           </div>
-        </motion.div>
 
-        {/* Modal d'authentification */}
-        {showAuthModal && (
-          <AuthModal 
-            onClose={() => setShowAuthModal(false)}
-            onAuthSuccess={handleAuthSuccess}
-          />
-        )}
-      </>
+          {/* Titre - ✅ IDENTIQUE */}
+          <div className="space-y-2">
+            <h2 className="text-2xl font-bold text-gray-900">
+              Connexion requise
+            </h2>
+            <p className="text-gray-600">
+              Vous devez être connecté pour accéder à {pageName}
+            </p>
+          </div>
+
+          {/* Boutons d'action - ✅ MODIFIÉ : redirection /login */}
+          <div className="space-y-3 pt-4">
+            <motion.button
+              onClick={handleRedirectToLogin}  // ✅ CHANGÉ
+              className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <LogIn size={20} />
+              Se connecter
+            </motion.button>
+
+            <p className="text-sm text-gray-600">
+              Pas encore de compte ?{" "}
+              <button
+                onClick={handleRedirectToLogin}  // ✅ CHANGÉ
+                className="text-blue-600 hover:text-blue-700 font-semibold"
+              >
+                Créer un compte gratuitement
+              </button>
+            </p>
+          </div>
+
+          {/* Avantages - ✅ IDENTIQUE */}
+          <div className="pt-6 border-t border-gray-200">
+            <p className="text-sm font-semibold text-gray-700 mb-3">
+              Avec un compte, vous pouvez :
+            </p>
+            <ul className="text-sm text-gray-600 space-y-2 text-left">
+              <li className="flex items-start gap-2">
+                <span className="text-green-600 mt-0.5">✓</span>
+                <span>Publier des annonces gratuitement</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-green-600 mt-0.5">✓</span>
+                <span>Contacter les vendeurs directement</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-green-600 mt-0.5">✓</span>
+                <span>Gérer votre profil et vos annonces</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-green-600 mt-0.5">✓</span>
+                <span>Sauvegarder vos favoris</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </motion.div>
+      // ✅ SUPPRIMÉ COMPLETEMENT : {showAuthModal && <AuthModal ... />}
     );
   }
 
-  // ✅ Vérifier si l'utilisateur a le bon rôle
+  // ✅ Vérifier si l'utilisateur a le bon rôle - IDENTIQUE
   if (requiredRole === "admin" && userRole !== "admin") {
     return (
       <motion.div
@@ -136,12 +127,12 @@ export default function ProtectedRoute({ children, pageName = "cette page", requ
         className="min-h-[60vh] flex items-center justify-center px-4"
       >
         <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8 text-center space-y-6">
-          {/* Icône d'erreur */}
+          {/* Icône d'erreur - ✅ IDENTIQUE */}
           <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto">
             <AlertCircle className="text-red-600" size={40} />
           </div>
 
-          {/* Titre */}
+          {/* Titre - ✅ IDENTIQUE */}
           <div className="space-y-2">
             <h2 className="text-2xl font-bold text-gray-900">
               Accès refusé
@@ -151,7 +142,7 @@ export default function ProtectedRoute({ children, pageName = "cette page", requ
             </p>
           </div>
 
-          {/* Message informatif */}
+          {/* Message informatif - ✅ IDENTIQUE */}
           <div className="bg-red-50 border border-red-200 rounded-lg p-4">
             <p className="text-sm text-red-700">
               Votre compte n'a pas les permissions nécessaires.
@@ -162,6 +153,6 @@ export default function ProtectedRoute({ children, pageName = "cette page", requ
     );
   }
 
-  // Si connecté ET a le bon rôle, afficher le contenu de la page
+  // Si connecté ET a le bon rôle, afficher le contenu - ✅ IDENTIQUE
   return children;
 }
