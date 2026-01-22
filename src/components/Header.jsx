@@ -1,54 +1,39 @@
 // src/components/Header.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { LogIn, LogOut, BookOpen, Menu, X, User, Search, UserCircle } from "lucide-react";
-import { Link, useNavigate, useLocation } from "react-router-dom"; // ✅ AJOUT useNavigate
+import { LogIn, LogOut, BookOpen, Menu, X, User, UserCircle, Shield } from "lucide-react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export default function Header() {
-  const navigate = useNavigate(); // ✅ AJOUTÉ
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userData, setUserData] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  // ✅ SUPPRIMÉ : const [authModalOpen, setAuthModalOpen] = useState(false);
-  // ✅ SUPPRIMÉ : const [searchQuery, setSearchQuery] = useState("");
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      setIsAuthenticated(true);
-      setUserData(user);
-    }
-  }, []);
-
-  const handleAuthSuccess = (user) => {
-    setIsAuthenticated(true);
-    setUserData(user);
-    // ✅ SUPPRIMÉ : setAuthModalOpen(false);
-  };
+  // ✅ UTILISER AuthContext au lieu de localStorage directement
+  const { user, isAuthenticated, logout } = useAuth();
 
   const handleLogout = () => {
-    setIsAuthenticated(false);
-    setUserData(null);
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    window.location.reload();
+    logout();
+    navigate("/");
   };
 
-  // ✅ NOUVEAU : Bouton Connexion → /login
   const handleLogin = () => {
     navigate("/login");
   };
 
-  const location = useLocation();
-
+  // ✅ Navigation adaptée au rôle
   const navItems = [
     { to: "/", label: "Accueil" },
     { to: "/annonces", label: "Annonces" },
     { to: "/profil", label: "Profil" },
     { to: "/apropos", label: "À propos" },
   ];
+
+  // ✅ Ajouter le lien Admin uniquement pour les admins
+  if (user?.role === 'admin') {
+    navItems.push({ to: "/admin", label: "Administration", isAdmin: true });
+  }
 
   return (
     <motion.header
@@ -66,47 +51,65 @@ export default function Header() {
 
       <div className="h-16 flex items-center justify-between gap-3 max-w-7xl mx-auto px-4 lg:px-6">
         
-        {/* Logo - ✅ IDENTIQUE */}
+        {/* Logo */}
         <Link to="/" className="flex items-center gap-2 text-gray-900 font-semibold text-lg hover:text-blue-600 transition-colors">
           <BookOpen size={24} className="text-blue-600" />
           <span className="hidden sm:inline">TrocScolaire</span>
         </Link>
 
-        {/* Navigation desktop - ✅ IDENTIQUE */}
+        {/* Navigation desktop */}
         <nav className="hidden md:flex items-center gap-1" aria-label="Navigation principale">
           {navItems.map((item) => (
             <Link
               key={item.to}
               to={item.to}
               className={`
-                px-4 py-2 rounded-lg font-medium transition-all duration-200
+                px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2
                 ${location.pathname === item.to 
                   ? 'bg-blue-600 text-white' 
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                  : item.isAdmin 
+                    ? 'text-orange-600 hover:bg-orange-50 hover:text-orange-700'
+                    : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
                 }
               `}
               aria-current={location.pathname === item.to ? "page" : undefined}
             >
+              {item.isAdmin && <Shield size={16} />}
               {item.label}
             </Link>
           ))}
         </nav>
 
-        {/* Actions - ✅ MODIFIÉ UNIQUEMENT le bouton Connexion */}
+        {/* Actions */}
         <div className="flex items-center gap-3">
-          {isAuthenticated && userData ? (
-            // ✅ UTILISATEUR CONNECTÉ - IDENTIQUE
+          {isAuthenticated && user ? (
             <div className="flex items-center gap-3">
+              {/* Badge utilisateur avec rôle visible */}
               <motion.div 
-                className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg border border-blue-200"
+                className={`hidden sm:flex items-center gap-2 px-4 py-2 rounded-lg border ${
+                  user.role === 'admin' 
+                    ? 'bg-gradient-to-r from-orange-50 to-orange-100 border-orange-200' 
+                    : 'bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200'
+                }`}
                 whileHover={{ scale: 1.02 }}
               >
-                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                  <User size={16} className="text-white" />
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                  user.role === 'admin' ? 'bg-orange-600' : 'bg-blue-600'
+                }`}>
+                  {user.role === 'admin' ? (
+                    <Shield size={16} className="text-white" />
+                  ) : (
+                    <User size={16} className="text-white" />
+                  )}
                 </div>
-                <span className="text-sm font-semibold text-gray-900">
-                  {userData.prenom || userData.nom}
-                </span>
+                <div>
+                  <span className="text-sm font-semibold text-gray-900 block">
+                    {user.prenom || user.nom}
+                  </span>
+                  {user.role === 'admin' && (
+                    <span className="text-xs text-orange-600 font-medium">Admin</span>
+                  )}
+                </div>
               </motion.div>
 
               <motion.button
@@ -121,9 +124,8 @@ export default function Header() {
               </motion.button>
             </div>
           ) : (
-            // ✅ NON CONNECTÉ - CHANGÉ : onClick → handleLogin()
             <motion.button
-              onClick={handleLogin}  // ✅ MODIFIÉ
+              onClick={handleLogin}
               className="relative flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl overflow-hidden group"
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
@@ -134,7 +136,7 @@ export default function Header() {
             </motion.button>
           )}
 
-          {/* Menu burger - ✅ IDENTIQUE */}
+          {/* Menu burger */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden p-2 text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
@@ -145,7 +147,7 @@ export default function Header() {
         </div>
       </div>
 
-
+      {/* Menu mobile */}
       {mobileMenuOpen && (
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -160,29 +162,45 @@ export default function Header() {
                 to={item.to}
                 onClick={() => setMobileMenuOpen(false)}
                 className={`
-                  px-4 py-3 rounded-lg font-medium transition-all
+                  px-4 py-3 rounded-lg font-medium transition-all flex items-center gap-2
                   ${location.pathname === item.to 
                     ? 'bg-blue-600 text-white' 
-                    : 'text-gray-600 hover:bg-gray-100'
+                    : item.isAdmin
+                      ? 'text-orange-600 hover:bg-orange-50'
+                      : 'text-gray-600 hover:bg-gray-100'
                   }
                 `}
               >
+                {item.isAdmin && <Shield size={16} />}
                 {item.label}
               </Link>
             ))}
             
             {/* Actions mobile */}
-            {isAuthenticated && userData ? (
+            {isAuthenticated && user ? (
               <div className="pt-2 border-t border-gray-200 space-y-2 mt-2">
-                <div className="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg border border-blue-200">
-                  <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-                    <User size={18} className="text-white" />
+                <div className={`flex items-center gap-3 px-4 py-3 rounded-lg border ${
+                  user.role === 'admin'
+                    ? 'bg-gradient-to-r from-orange-50 to-orange-100 border-orange-200'
+                    : 'bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200'
+                }`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    user.role === 'admin' ? 'bg-orange-600' : 'bg-blue-600'
+                  }`}>
+                    {user.role === 'admin' ? (
+                      <Shield size={18} className="text-white" />
+                    ) : (
+                      <User size={18} className="text-white" />
+                    )}
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-gray-900">
-                      {userData.prenom} {userData.nom}
+                      {user.prenom} {user.nom}
                     </p>
-                    <p className="text-xs text-gray-600">{userData.email}</p>
+                    <p className="text-xs text-gray-600">{user.email}</p>
+                    {user.role === 'admin' && (
+                      <p className="text-xs text-orange-600 font-medium mt-1">Administrateur</p>
+                    )}
                   </div>
                 </div>
                 
@@ -198,10 +216,9 @@ export default function Header() {
                 </button>
               </div>
             ) : (
-              // ✅ MOBILE - CHANGÉ : onClick → handleLogin()
               <button
                 onClick={() => {
-                  handleLogin();  // ✅ MODIFIÉ
+                  handleLogin();
                   setMobileMenuOpen(false);
                 }}
                 className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg mt-2"
@@ -213,7 +230,6 @@ export default function Header() {
           </nav>
         </motion.div>
       )}
-
     </motion.header>
   );
 }

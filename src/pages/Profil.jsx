@@ -58,11 +58,30 @@ export default function Profil() {
     );
   }
 
-  // Calculer la date d'inscription
-  const dateInscription = new Date(userData.id).toLocaleDateString('fr-FR', { 
-    month: 'long', 
-    year: 'numeric' 
-  });
+  // ✅ CORRIGÉ : Calculer la date d'inscription à partir de createdAt ou afficher un message par défaut
+  const getDateInscription = () => {
+    if (userData.createdAt) {
+      // Si createdAt existe, l'utiliser
+      return new Date(userData.createdAt).toLocaleDateString('fr-FR', { 
+        month: 'long', 
+        year: 'numeric' 
+      });
+    } else if (userData.id) {
+      // Sinon, extraire la date depuis l'ObjectId MongoDB (les 8 premiers caractères sont un timestamp)
+      try {
+        const timestamp = parseInt(userData.id.substring(0, 8), 16) * 1000;
+        return new Date(timestamp).toLocaleDateString('fr-FR', { 
+          month: 'long', 
+          year: 'numeric' 
+        });
+      } catch (e) {
+        return "Récemment";
+      }
+    }
+    return "Récemment";
+  };
+
+  const dateInscription = getDateInscription();
 
   return (
     <div className="w-full space-y-6">
