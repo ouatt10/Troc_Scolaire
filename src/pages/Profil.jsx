@@ -203,7 +203,7 @@ export default function Profil() {
                     <div className="flex-1">
                       <h3 className="font-semibold text-gray-900">{annonce.titre}</h3>
                       <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
-                        <span>{annonce.prix.toLocaleString()} FCFA</span>
+                        <span>{annonce.prix ? annonce.prix.toLocaleString() : '0'} FCFA</span>
                         <span>•</span>
                         <span>{annonce.vues || 0} vues</span>
                         <span>•</span>
